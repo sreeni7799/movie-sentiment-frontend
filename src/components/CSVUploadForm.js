@@ -75,7 +75,7 @@ const CSVUploadForm = ({ onUpload, isLoading }) => {
       <div style={{ marginTop: '15px', fontSize: '14px', color: '#666' }}>
         <p><strong>CSV Format Requirements:</strong></p>
         <ul>
-          <li>Must contain columns: movie_name, review_text</li>
+          <li>Must contain columns: title, review</li>
           <li>First row should be headers</li>
           <li>Maximum file size: 5MB</li>
         </ul>
