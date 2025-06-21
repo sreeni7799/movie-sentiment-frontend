@@ -24,8 +24,8 @@ const ResultsDisplay = ({ results }) => {
           }}
         >
           <h3>{result.movie_name}</h3>
-          <p><strong>Sentiment:</strong> {result.predicted_sentiment}</p>
-          <p><strong>Confidence:</strong> {(result.confidence_score * 100).toFixed(1)}%</p>
+          <p><strong>Sentiment:</strong> {result.sentiment}</p>
+          <p><strong>Confidence:</strong> {(result.confidence * 100).toFixed(1)}%</p>
           <p><strong>Review:</strong> {result.original_text}</p>
         </div>
       ))}
