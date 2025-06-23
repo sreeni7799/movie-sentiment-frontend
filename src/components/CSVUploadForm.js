@@ -68,7 +68,7 @@ const CSVUploadForm = ({ onUpload, isLoading }) => {
             cursor: isLoading ? 'not-allowed' : 'pointer'
           }}
         >
-          {isLoading ? 'Processing CSV...' : 'Upload and Analyze'}
+          {isLoading ? 'Processing CSV...' : 'Analyze'}
         </button>
       </form>
       
@@ -77,7 +77,7 @@ const CSVUploadForm = ({ onUpload, isLoading }) => {
         <ul>
           <li>Must contain columns: title, review</li>
           <li>First row should be headers</li>
-          <li>Maximum file size: 5MB</li>
+          <li>Maximum file size: 100 MB</li>
         </ul>
       </div>
     </div>
