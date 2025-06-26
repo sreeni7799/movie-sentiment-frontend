@@ -24,28 +24,48 @@ function App() {
   };
 
   const handleCSVUpload = async (file) => {
-    setIsUploading(true);
-    setUploadStatus('');
+  setIsUploading(true);
+  setUploadStatus('');
+  
+  try {
+    const result = await uploadCSV(file);
     
-    try {
-      const result = await uploadCSV(file);
-      setUploadStatus(`Successfully processed ${result.processed_count} reviews from ${result.total_rows} total rows`);
+    // Handle different response formats more robustly
+    let statusMessage = '';
+    
+    if (result.processing_mode === 'background' || result.processing_mode === 'background_worker') {
+      // Background processing response
+      statusMessage = `CSV queued for background processing.` +
+                     `Processing ${result.queued_for_processing || result.cleaned_rows || 'unknown'} reviews from ` +
+                     `${result.total_rows || 'unknown'} total rows.`;
+    } else {
+      // Synchronous processing response
+      const processedCount = result.processed_count || result.stored_count || 'unknown';
+      const totalRows = result.total_rows || result.cleaned_rows || 'unknown';
       
-      setTimeout(() => {
-        handleSearch('', '');
-      }, 1000);
-      
-      return { 
-        success: true, 
-        message: `Successfully processed ${result.processed_count} reviews` 
-      };
-    } catch (error) {
-      setUploadStatus(' CSV processing failed');
-      return { success: false, error: 'CSV processing failed' };
-    } finally {
-      setIsUploading(false);
+      statusMessage = `Successfully processed ${processedCount} reviews from ${totalRows} total rows`;
     }
-  };
+    
+    setUploadStatus(statusMessage);
+    
+    // Auto-refresh results after a delay
+    setTimeout(() => {
+      handleSearch('', '');
+    }, 2000);  // Increased delay for background processing
+    
+    return { 
+      success: true, 
+      message: statusMessage 
+    };
+  } catch (error) {
+    const errorMessage = 'CSV processing failed';
+    setUploadStatus(errorMessage);
+    return { success: false, error: errorMessage };
+  } finally {
+    setIsUploading(false);
+  }
+};
+
 
   const handleSearch = async (movieName, sentiment) => {
     setIsSearching(true);

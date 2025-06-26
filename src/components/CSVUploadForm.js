@@ -8,30 +8,35 @@ const CSVUploadForm = ({ onUpload, isLoading }) => {
     setSelectedFile(file);
   };
 
-  const handleUpload = async (e) => {
-    e.preventDefault();
-    
-    if (!selectedFile) {
-      alert('Please select a CSV file first');
-      return;
-    }
+const handleUpload = async (e) => {
+  e.preventDefault();
+  
+  if (!selectedFile) {
+    alert('Please select a CSV file first');
+    return;
+  }
 
-    if (!selectedFile.name.endsWith('.csv')) {
-      alert('Please select a valid CSV file');
-      return;
-    }
+  if (!selectedFile.name.endsWith('.csv')) {
+    alert('Please select a valid CSV file');
+    return;
+  }
 
-    const result = await onUpload(selectedFile);
+  const result = await onUpload(selectedFile);
+  
+  if (result.success) {
+    let alertMessage = result.message;
     
-    if (result.success) {
-      alert(result.message);
-      setSelectedFile(null);
-      // Clear the file input
-      e.target.reset();
-    } else {
-      alert(result.error);
+    if (result.message.includes('queued')) {
+      alertMessage += '\n\nThe file is being processed in the background. Results will appear automatically when complete.';
     }
-  };
+    
+    alert(alertMessage);
+    setSelectedFile(null);
+    e.target.reset();
+  } else {
+    alert(result.error || 'Upload failed');
+  }
+};
 
   return (
     <div style={{ marginBottom: '30px', padding: '20px', border: '1px solid #ccc' }}>
